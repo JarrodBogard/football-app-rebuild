@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { usePlayerContext } from "../hooks/usePlayerContext";
+import { useAuthContext } from "../hooks/useAuthContext";
 
 const AddPlayerForm = () => {
   const { dispatch } = usePlayerContext();
+  const { user } = useAuthContext();
   const [state, setState] = useState({
-    user_id: 2,
+    user_id: user.id,
     first_name: "",
     last_name: "",
   });
@@ -31,6 +33,11 @@ const AddPlayerForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!user) {
+      setError("You must be logged in");
+      return;
+    }
+
     const response = await fetch(
       `https://football-app-beta.vercel.app/players`,
       {
@@ -38,6 +45,7 @@ const AddPlayerForm = () => {
         body: JSON.stringify(state),
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${user.token}`,
         },
       }
     );
@@ -61,7 +69,6 @@ const AddPlayerForm = () => {
       });
 
       setError(null);
-      console.log("Player added", json);
       dispatch({ type: "CREATE_PLAYER", payload: json });
     }
   };

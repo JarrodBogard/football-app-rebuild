@@ -1,20 +1,48 @@
+import { useEffect } from "react";
 import { usePlayerContext } from "../hooks/usePlayerContext";
+import { useAuthContext } from "../hooks/useAuthContext";
+import { useGenStatsContext } from "../hooks/useGenStatsContext";
 
 const PlayerSummaryCard = ({ player }) => {
   const { dispatch } = usePlayerContext();
+  const { user } = useAuthContext();
+  const { dispatch: genStatsDispatch } = useGenStatsContext();
+
+  useEffect(() => {
+    const fetchGenPlayerStats = async () => {
+      const response = await fetch(
+        "https://api.sportsdata.io/api/nfl/fantasy/json/Players?key=61fd0979be90419cbd6dc53c4e6f2df3"
+      );
+
+      const json = await response.json();
+
+      genStatsDispatch({
+        type: "GET_STATS",
+        payload: json,
+      });
+    };
+
+    fetchGenPlayerStats();
+  }, [genStatsDispatch]);
 
   const handleClick = async () => {
+    if (!user) {
+      return;
+    }
+
     const response = await fetch(
       `https://football-app-beta.vercel.app/players/${player.id}`,
       {
         method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
       }
     );
 
     const json = await response.json();
 
     if (response.ok) {
-      console.log(json, "json data");
       dispatch({ type: "DELETE_PLAYER", payload: json });
     }
   };
@@ -25,7 +53,6 @@ const PlayerSummaryCard = ({ player }) => {
         {player.first_name}
         {player.last_name}
       </h1>
-      <p>{/* {player.id} {player.user_id} */}</p>
       <button onClick={handleClick}>delete</button>
     </li>
   );

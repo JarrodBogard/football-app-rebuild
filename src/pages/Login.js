@@ -1,15 +1,18 @@
 import { useState } from "react";
 import { useLogin } from "../hooks/useLogin";
+import { usePlayerStatsFilter } from "../hooks/usePlayerStatsFilter";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { login, error, isLoading } = useLogin();
+  const { setData } = usePlayerStatsFilter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     await login(username, password);
+    setData();
   };
 
   return (
