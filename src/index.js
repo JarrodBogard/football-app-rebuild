@@ -5,16 +5,16 @@ import App from "./App";
 
 import { PlayerContextProvider } from "./contexts/PlayerContext";
 import { AuthContextProvider } from "./contexts/AuthContext";
-import { GenStatsContextProvider } from "./contexts/GenStatsContext";
+import { StatsContextProvider } from "./contexts/StatsContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <AuthContextProvider>
       <PlayerContextProvider>
-        <GenStatsContextProvider>
+        <StatsContextProvider>
           <App />
-        </GenStatsContextProvider>
+        </StatsContextProvider>
       </PlayerContextProvider>
     </AuthContextProvider>
   </React.StrictMode>

@@ -4,7 +4,7 @@ export const PlayerContext = createContext();
 
 export const playersReducer = (state, action) => {
   switch (action.type) {
-    case "GET_PLAYERS":
+    case "SET_PLAYERS":
       return {
         players: action.payload,
       };

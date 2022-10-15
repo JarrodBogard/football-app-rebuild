@@ -23,7 +23,7 @@ const Home = () => {
 
       if (response.ok) {
         dispatch({
-          type: "GET_PLAYERS",
+          type: "SET_PLAYERS",
           payload: json,
         });
       }

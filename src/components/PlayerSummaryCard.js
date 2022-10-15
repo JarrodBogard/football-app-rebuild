@@ -1,12 +1,14 @@
 import { useEffect } from "react";
 import { usePlayerContext } from "../hooks/usePlayerContext";
 import { useAuthContext } from "../hooks/useAuthContext";
-import { useGenStatsContext } from "../hooks/useGenStatsContext";
+import { useStatsContext } from "../hooks/useStatsContext";
+
+import DetailsCard from "./DetailsCard";
 
 const PlayerSummaryCard = ({ player }) => {
   const { dispatch } = usePlayerContext();
   const { user } = useAuthContext();
-  const { dispatch: genStatsDispatch } = useGenStatsContext();
+  const { dispatch: genStatsDispatch } = useStatsContext(); // genStats for rendering player overview
 
   useEffect(() => {
     const fetchGenPlayerStats = async () => {
@@ -17,7 +19,7 @@ const PlayerSummaryCard = ({ player }) => {
       const json = await response.json();
 
       genStatsDispatch({
-        type: "GET_STATS",
+        type: "SET_STATS",
         payload: json,
       });
     };
@@ -54,6 +56,7 @@ const PlayerSummaryCard = ({ player }) => {
         {player.last_name}
       </h1>
       <button onClick={handleClick}>delete</button>
+      <DetailsCard />
     </li>
   );
 };
